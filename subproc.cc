@@ -255,7 +255,7 @@ static void seccompViolation(nsjconf_t* nsjconf, siginfo_t* si) {
 	const pids_t* p = getPidElem(nsjconf, si->si_pid);
 	if (p == NULL) {
 		LOG_W("PID:%d SiSyscall: %d, SiCode: %d, SiErrno: %d, SiSigno: %d", (int)si->si_pid,
-		    si->si_syscall, si->si_code, si->si_errno, si->si_signo);
+		    -1, si->si_code, si->si_errno, si->si_signo);
 		LOG_E("Couldn't find pid element in the subproc list for PID: %d", (int)si->si_pid);
 		return;
 	}
@@ -264,7 +264,7 @@ static void seccompViolation(nsjconf_t* nsjconf, siginfo_t* si) {
 	ssize_t rdsize = util::readFromFd(p->pid_syscall_fd, buf, sizeof(buf) - 1);
 	if (rdsize < 1) {
 		LOG_W("PID: %d, SiSyscall: %d, SiCode: %d, SiErrno: %d, SiSigno: %d",
-		    (int)si->si_pid, si->si_syscall, si->si_code, si->si_errno, si->si_signo);
+		    (int)si->si_pid, -1, si->si_code, si->si_errno, si->si_signo);
 		return;
 	}
 	buf[rdsize - 1] = '\0';
@@ -277,17 +277,17 @@ static void seccompViolation(nsjconf_t* nsjconf, siginfo_t* si) {
 		LOG_W(
 		    "PID: %d, Syscall number: %td, Arguments: %#tx, %#tx, %#tx, %#tx, %#tx, %#tx, "
 		    "SP: %#tx, PC: %#tx, si_syscall: %d, si_errno: %#x",
-		    (int)si->si_pid, sc, arg1, arg2, arg3, arg4, arg5, arg6, sp, pc, si->si_syscall,
+		    (int)si->si_pid, sc, arg1, arg2, arg3, arg4, arg5, arg6, sp, pc, -1,
 		    si->si_errno);
 	} else if (ret == 3) {
 		LOG_W(
 		    "PID: %d, SiSyscall: %d, SiCode: %d, SiErrno: %d, SiSigno: %d, SP: %#tx, PC: "
 		    "%#tx",
-		    (int)si->si_pid, si->si_syscall, si->si_code, si->si_errno, si->si_signo, arg1,
+		    (int)si->si_pid, -1, si->si_code, si->si_errno, si->si_signo, arg1,
 		    arg2);
 	} else {
 		LOG_W("PID: %d, SiSyscall: %d, SiCode: %d, SiErrno: %d, Syscall string '%s'",
-		    (int)si->si_pid, si->si_syscall, si->si_code, si->si_errno, buf);
+		    (int)si->si_pid, -1, si->si_code, si->si_errno, buf);
 	}
 }
 

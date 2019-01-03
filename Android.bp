@@ -1,0 +1,45 @@
+cc_binary_host {
+    name: "nsjail",
+    cflags: [
+        "-D_GNU_SOURCE",
+        "-Wformat",
+        "-Wformat-security",
+        "-Wno-format-nonliteral",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Wno-unused",
+        "-Wno-unused-parameter",
+    ],
+    cppflags: ["-fno-exceptions"],
+    srcs: [
+        "caps.cc",
+        "cgroup.cc",
+        "cmdline.cc",
+        "config.cc",
+        "contain.cc",
+        "cpu.cc",
+        "logs.cc",
+        "mnt.cc",
+        "net.cc",
+        "nsjail.cc",
+        "pid.cc",
+        "subproc.cc",
+        "uts.cc",
+        "user.cc",
+        "util.cc",
+
+        "sandbox_no_kafel.cc",
+
+        "config.proto",
+    ],
+    proto: {
+        type: "full",
+    },
+
+    target: {
+        darwin: {
+            enabled: false,
+        },
+    },
+}
